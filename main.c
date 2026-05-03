@@ -1,56 +1,100 @@
+/* ================================================================
+      ALGORITHMICS AND DYNAMIC DATA STRUCTURES LAB WORK   
+   ================================================================
+   Data struct used is singly linked list of paragraphs, each
+   paragraph is a singly linked list of words.
+ 
+   Realised by Selmane Nada & Houchati Abdelmoumene 
+   ================================================================
+   Submitted May 10th 2026
+   ================================================================ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
-//The Abstract machine of linked lists
-// 1- The linked lists definitions
-typedef char elementtype ; 
+// CONSTANT DEFINITONS: 
+#define MaxWord 64
+#define MaxLine BUFSIZ 
+#define MaxFileName 256
+#define MaxDocuments 10 
 
-typedef struct Cell {
-    elementtype value;
-    struct Cell *addr ;
-} Cell; 
 
-typedef Cell *pointer;
+//DATA STRUCTURE 
+// 1- WORD : ELEMENT IN A PARAGRAPH 
 
-//LLC abstract machine operations : 
+typedef struct WordCell {
+    char Word[MaxWord];
+    struct WordCell *NextWord;
+} WordCell;
 
-//Allocate : its role is to allocate the pointer in the memory
-pointer Allocate() {
-    pointer p = (pointer)malloc(sizeof(Cell));
-    if (p==NULL) {
-        printf("memory allocation failed");
+//2- PARAGRAPH : ELEMENT IN A TEXT DOCUMENT
+
+typedef struct ParagraphCell {
+    int paraName; 
+    WordCell *words;
+    struct ParagraphCell *next; 
+    int WordCount;
+}ParagraphCell;
+
+//3-DOCUMENT : SET OF PARAGRAPHS
+
+typedef struct DocumentCell {
+    char filename[MaxFileName];
+    struct ParagraphCell *Paragraph; 
+    int numberof_para;
+} DocumentCell; 
+
+// ================================================================
+// Words ABSTRACT MACHINE 
+// CHECK IF THE WORD IS EXISTANT IN A SET 
+int ExistentWord(WordCell *head , const char *word) {
+    for (; head; head=head->NextWord);
+    if (strcmp(head->Word,word)==0) return 1;
+    return 0;
+}
+ // INSERT A WORD IN THE LIST 
+int InsertWord(WordCell **head, const char *word ) {
+    //if the word is already existant, no need to insert it
+    if (ExistentWord(*head,word)) return 0;
+    // insert the word in the linked list 
+    WordCell *newword= malloc(sizeof(WordCell));
+    //copy the word we want to insert into the word field 
+    strcmp(newword->Word, word);
+    // link it to the list 
+    newword->NextWord = *head;
+    *head = newword;
+    return 1;
+}
+// DELETE SET OF WORDS 
+void DeleteSet(WordCell *head) { 
+    while (head !=NULL)    {
+    WordCell *temp = head;
+    head=head->NextWord;
+    free(temp); 
     }
-    p->value =0;
-    p->addr = NULL;
-    return p;  
-}
-// free pointer : its role is to deallocate the cell from the memory 
-void free_LL_Cell(pointer p) {
-    free(p);
 }
 
-// ASS_VAL is to assign a certain value v to the val field of the cell
-void Ass_val(pointer p, elementtype v) {
-    p->value = v;
+// PRINT A SET OF WORDS 
+void PrintSet(WordCell *head) {
+    int cpt = 0; 
+    if (!head) {
+        printf("The set is empty");
+        return;
+    }
+    while (head != NULL) {
+        printf("%s", head->Word);
+        if (++cpt % 10 == 0) {
+            printf("\n");
+        }
+    }
+  if (cpt % 10 !=10 ){ printf("\n"); }
+     
 }
 
-//ASS_ADR is to link the cells p to q by assigning q to the address field of p
-void Ass_adr(pointer p, pointer q) {
-    p->addr = q;
+//THE ABSTRACT MACHINE OF PARAGRAPHS 
+ParagraphCell *CreateParagraph(int id) {
+    
 }
-
-//Value p returns the value field of the cell p
-elementtype Value(pointer p) {
-    return p->value;
-}
-
-//Adr p returns the address firld of the next cell linked to p 
-pointer Next(pointer p) {
-    return p->addr;
-};
-
-//DEFINITION OF THE TEXT DOCUMENTS LLC STRUCTURES 
-/* */
-
+ParagraphCell *p = NULL;
